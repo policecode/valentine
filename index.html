@@ -1,0 +1,1386 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>💖 Valentine's Surprise</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --glow: #ff69b4;
+        --brand: #ff2c2c;
+        --glow: #ffb6c1; /* Màu hồng nhạt cho hiệu ứng tỏa sáng */
+        --brand: #e63946; /* Màu đỏ Valentine chủ đạo */
+        --ribbon-color: #fcefb4; /* Màu vàng kem/vàng hồng cho ruy băng */
+        --box-shadow: #8b0000;
+      }
+      * {
+        box-sizing: border-box;
+        font-family: "Dancing Script", cursive;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        color: #fff;
+        font-family: "Plus Jakarta Sans", system-ui;
+        background: radial-gradient(circle at center, #4a0e0e 0%, #1a0505 100%);
+      }
+      #space {
+        position: fixed;
+        inset: 0;
+        z-index: -3;
+      }
+
+      /* ===== Gift box ===== */
+      .stage {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        z-index: 1100;
+      }
+      .gift {
+        position: relative;
+        width: 280px;
+        height: 240px;
+        cursor: pointer;
+        transform-style: preserve-3d;
+        perspective: 1200px;
+        filter: drop-shadow(0 14px 28px #0007);
+        transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.2, 1);
+        z-index: 1200;
+      }
+      .gift:hover {
+        transform: translateY(-6px) rotateX(3deg) rotateY(-2deg);
+      }
+      .box,
+      .lid {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+      }
+      .box {
+        bottom: 0;
+        height: 66%;
+        border-radius: 20px;
+        /* Hiệu ứng đỏ nhung sâu hơn */
+        background: linear-gradient(180deg, #ff4d4d, #c31432 65%, #8b0000);
+        box-shadow:
+          inset 0 0 0 1px #5e0b0b,
+          inset 0 -10px 30px #0006,
+          0 12px 40px #0008;
+      }
+      .ribbon-v,
+      .ribbon-h {
+        position: absolute;
+        /* Đổi từ trắng sang vàng kem/vàng hồng */
+        background: linear-gradient(180deg, #fcefb4, #f8d48a);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+      .ribbon-v {
+        width: 24px;
+        left: calc(50% - 12px);
+        top: 0;
+        height: 100%;
+        border-radius: 10px;
+      }
+      .ribbon-h {
+        height: 20px;
+        width: 100%;
+        top: 44%;
+        left: 0;
+      }
+      .lid {
+        top: 0;
+        height: 30%;
+        transform-origin: 50% 100%;
+        border-radius: 20px 20px 12px 12px;
+        background: linear-gradient(180deg, #ff5e5e, #d4143a 70%, #a00b28);
+        box-shadow:
+          inset 0 0 0 1px #7b0808,
+          0 10px 20px #0009;
+        transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .lid::after {
+        content: "";
+        position: absolute;
+        left: 6%;
+        right: 6%;
+        bottom: -5px;
+        height: 8px;
+        border-radius: 0 0 10px 10px;
+        background: linear-gradient(180deg, #b90b0b, #7a0707);
+        box-shadow: 0 5px 10px #0008;
+      }
+      .lid .ribbon-v {
+        height: 100%;
+        border-radius: 10px;
+      }
+      .bow {
+        position: absolute;
+        top: -2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 56px;
+      }
+      .bow .loop {
+        position: absolute;
+        top: 6px;
+        width: 56px;
+        height: 36px;
+        border-radius: 40px 40px 14px 14px;
+        /* Thay đổi từ màu xanh sang màu hồng/đỏ đồng bộ */
+        background: linear-gradient(180deg, #ffb6c1 0%, #ff4d6d 80%);
+        box-shadow:
+          0 6px 12px #0004,
+          inset 0 -6px 10px #c9184a;
+      }
+      .bow .loop.left {
+        left: 0;
+        transform: rotate(-10deg);
+      }
+      .bow .loop.right {
+        right: 0;
+        transform: rotate(10deg);
+      }
+      .bow .knot {
+        position: absolute;
+        left: 50%;
+        top: 16px;
+        transform: translateX(-50%);
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        /* Nút thắt nơ màu hồng đậm */
+        background: linear-gradient(180deg, #ff8fa3, #ff4d6d);
+        box-shadow:
+          0 0 10px rgba(255, 77, 109, 0.5),
+          inset 0 -6px 10px #a4133c;
+      }
+
+      .glow {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        box-shadow:
+          0 0 22px 4px var(--glow) inset,
+          0 0 36px 14px var(--glow);
+        opacity: 0;
+        transition: opacity 0.6s;
+      }
+      .preflash {
+        position: absolute;
+        inset: -6px;
+        border-radius: 22px;
+        pointer-events: none;
+        box-shadow:
+          0 0 18px 8px rgba(255, 255, 255, 0.7) inset,
+          0 0 70px 26px rgba(255, 255, 255, 0.55);
+        filter: blur(0.3px);
+        opacity: 0;
+        transition: opacity 0.28s ease;
+      }
+      .opened .lid {
+        transform: rotateX(60deg) translateY(-10px) scale(1.02);
+      }
+      .opened .glow {
+        opacity: 0.8;
+      }
+      .spark {
+        position: absolute;
+        inset: -18%;
+        pointer-events: none;
+        opacity: 0;
+      }
+      .opened .spark {
+        opacity: 1;
+      }
+      .hint {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translate(-50%, 18px);
+        color: #a7b3c4;
+        font-weight: 600;
+        animation: breathe 2.4s ease-in-out infinite;
+        text-align: center;
+        z-index: 1250;
+      }
+      .hint small {
+        display: block;
+        opacity: 0.8;
+      }
+      @keyframes breathe {
+        0%,
+        100% {
+          opacity: 1;
+          transform: translate(-50%, 18px);
+        }
+        50% {
+          opacity: 0.5;
+          transform: translate(-50%, 22px);
+        }
+      }
+
+      #hbdWrap {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        pointer-events: none;
+        z-index: 3000;
+        opacity: 0;
+      }
+      .hbd-letter {
+        display: inline-block;
+        font-family: "Dancing Script", cursive;
+        font-weight: 700;
+
+        /* CẬP NHẬT Ở ĐÂY: */
+        /* Sử dụng hàm clamp: Tối thiểu 40px, ưu tiên 10% chiều rộng màn hình, tối đa 96px */
+        font-size: clamp(40px, 8vw, 80px);
+
+        line-height: 1;
+        background: linear-gradient(90deg, #ff4d4d, #ff9a9e, #fad0c4);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 16px rgba(255, 255, 255, 0.35);
+        filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
+        transform: translateY(30px) scale(0.7) rotate(-6deg);
+        opacity: 0;
+
+        /* Đảm bảo chữ không bị ngắt dòng xấu trên điện thoại quá nhỏ */
+        white-space: nowrap;
+      }
+      @keyframes letterPop {
+        0% {
+          opacity: 0;
+          transform: translateY(30px) scale(0.7) rotate(-6deg);
+        }
+        60% {
+          opacity: 1;
+          transform: translateY(-6px) scale(1.05) rotate(2deg);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1) rotate(0);
+        }
+      }
+      #fireworks {
+        position: fixed;
+        inset: 0;
+        z-index: 950;
+        pointer-events: none;
+      }
+
+      img.fly {
+        position: absolute;
+        object-fit: cover;
+        border-radius: 18px;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.25);
+        box-shadow: 0 10px 34px #000a;
+        transition:
+          opacity 0.8s ease,
+          transform 1.6s cubic-bezier(0.2, 0.8, 0.25, 1);
+        z-index: 800;
+        will-change: transform, opacity;
+        pointer-events: none;
+      }
+      img.fly:hover {
+        transform: translate(-50%, -50%) scale(1.03);
+      }
+      @keyframes calmFloat {
+        0% {
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          transform: translate(-50%, -52%) scale(1.02);
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+      img.fly.calm {
+        animation: calmFloat 9s ease-in-out 2;
+      }
+
+      .ribbon-piece {
+        position: fixed;
+        width: 14px;
+        height: 6px;
+        border-radius: 3px;
+        background: linear-gradient(90deg, #ff9de1, #ffd166);
+        box-shadow: 0 0 10px rgba(255, 200, 220, 0.7);
+        z-index: 960;
+        pointer-events: none;
+      }
+      .banner {
+        position: fixed;
+        height: 10px;
+        background: linear-gradient(#fff, #eee);
+        border-radius: 6px;
+        box-shadow: 0 2px 10px #0006;
+        z-index: 960;
+        pointer-events: none;
+        transform-origin: left center;
+        opacity: 0.95;
+      }
+      .ring {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        border: 3px solid rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        z-index: 940;
+        pointer-events: none;
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(0.35);
+        animation: ringPulse 1200ms ease-out forwards;
+      }
+      @keyframes ringPulse {
+        to {
+          transform: translate(-50%, -50%) scale(3.2);
+          opacity: 0;
+        }
+      }
+
+      .notice {
+        position: fixed;
+        bottom: 12px;
+        right: 14px;
+        font-size: 12px;
+        color: #b9c4d1a8;
+        user-select: none;
+        z-index: 1000;
+      }
+
+      .flash {
+        position: fixed;
+        inset: 0;
+        background: #fff;
+        opacity: 0;
+        z-index: 4000;
+        pointer-events: none;
+      }
+      @keyframes flashAnim {
+        0% {
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.95;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      .shock {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.85;
+        z-index: 3999;
+        pointer-events: none;
+        animation: shock 1500ms ease-out forwards;
+      }
+      @keyframes shock {
+        to {
+          transform: translate(-50%, -50%) scale(50);
+          opacity: 0;
+        }
+      }
+      .frag {
+        position: fixed;
+        width: 16px;
+        height: 12px;
+        border-radius: 3px;
+        z-index: 3980;
+        pointer-events: none;
+        background: linear-gradient(180deg, #ff3a3a, #a30a0a);
+        box-shadow:
+          0 6px 16px #000a,
+          inset 0 -4px 8px #7b0808;
+      }
+
+      #letterOverlay {
+        position: fixed;
+        inset: 0;
+        display: none;
+        place-items: center;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(2px);
+        z-index: 4200;
+      }
+      .letter {
+        width: min(720px, 92vw);
+        background: #fff;
+        color: #222;
+        border-radius: 14px;
+        box-shadow: 0 24px 90px rgba(0, 0, 0, 0.45);
+        overflow: hidden;
+        transform: translateY(20px) scale(0.98);
+        opacity: 0;
+        font-family: ui-serif, Georgia, "Times New Roman", serif;
+      }
+      .letter-header {
+        background: linear-gradient(90deg, #ff9de1, #ffd166, #9de2ff);
+        height: 10px;
+      }
+      .letter-body {
+        padding: 22px 20px 26px;
+      }
+      .letter-body h2 {
+        margin: 6px 0 10px;
+        font-family: "Great Vibes", cursive;
+        font-size: 48px;
+        color: #c2185b;
+      }
+      .letter-body p {
+        line-height: 1.65;
+        margin: 10px 0;
+      }
+      .letter-close {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+        border: 0;
+        background: #111;
+        color: #fff;
+        font-weight: 700;
+        padding: 10px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      @media (max-width: 600px) {
+        .hbd-letter {
+          /* Giảm bóng đổ một chút để chữ trông sắc nét hơn trên màn hình nhỏ */
+          filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.35));
+          text-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="bgMusic" loop>
+      <source src="./Beautiful Things.mp3" type="audio/mpeg" />
+    </audio>
+
+    <div
+      id="musicBtn"
+      style="
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        z-index: 5000;
+        cursor: pointer;
+        font-size: 24px;
+        opacity: 0.6;
+      "
+    >
+      <span id="musicIcon">🔇</span>
+    </div>
+    <canvas id="space"></canvas>
+
+    <div id="hbdWrap" aria-hidden="true"></div>
+    <canvas id="fireworks"></canvas>
+
+    <main class="stage">
+      <div class="gift" id="gift" aria-label="Mở hộp quà">
+        <div class="lid">
+          <div class="ribbon-v"></div>
+          <div class="bow">
+            <div class="loop left"></div>
+            <div class="loop right"></div>
+            <div class="knot"></div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="ribbon-v"></div>
+          <div class="ribbon-h"></div>
+          <div class="glow"></div>
+          <div class="preflash" id="preflash"></div>
+        </div>
+        <canvas class="spark" id="spark" width="600" height="600"></canvas>
+        <div class="hint">
+          💝 Một món quà cho Valentine...<br />
+          <small id="remainTxt">Chạm vào để khám phá tình yêu ✨</small>
+        </div>
+      </div>
+    </main>
+
+    <!-- Lá thư -->
+    <div id="letterOverlay">
+      <div class="letter" id="letter">
+        <div class="letter-header"></div>
+        <div class="letter-body" id="letterContent">
+          <h2>Gửi Mrs. Thảo 🌹</h2>
+          <p>Chúc em một ngày 14/2 thật ấm áp và nhiều niềm vui.</p>
+          <p>
+            Anh không biết sau này mọi chuyện sẽ đi xa đến đâu, nhưng anh biết
+            rằng việc được gặp em và có cơ hội tìm hiểu em là điều khiến ngày
+            của anh trở nên đặc biệt hơn rất nhiều.
+          </p>
+          <p>
+            Hy vọng hôm nay em sẽ nhận được thật nhiều yêu thương - và nếu em
+            cho phép, anh cũng muốn góp một chút dịu dàng nhỏ bé của mình vào
+            đó.
+          </p>
+          <p>
+            Chúc em luôn mỉm cười thật nhiều… vì nụ cười của em đẹp đến mức
+            khiến người khác vô thức muốn quan tâm em nhiều hơn. 💛
+          </p>
+          <button class="letter-close" id="closeLetter">
+            Cái này thú vị chứ! Đóng thư lại nhé ❤️
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="notice" id="notice"></div>
+
+    <script>
+      const bgMusic = document.getElementById("bgMusic");
+      const musicBtn = document.getElementById("musicBtn");
+      const musicIcon = document.getElementById("musicIcon");
+      let isMusicPlaying = false;
+
+      // Hàm bật/tắt nhạc
+      function toggleMusic() {
+        if (isMusicPlaying) {
+          bgMusic.pause();
+          musicIcon.textContent = "🔇";
+        } else {
+          bgMusic.volume = 0.5;
+          bgMusic.play();
+          musicIcon.textContent = "🔊";
+        }
+        isMusicPlaying = !isMusicPlaying;
+      }
+      musicBtn.addEventListener("click", toggleMusic);
+      (function () {
+        const canvas = document.getElementById("space"),
+          ctx = canvas.getContext("2d");
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        let W, H;
+
+        function resize() {
+          W = innerWidth;
+          H = innerHeight;
+          canvas.width = W * dpr;
+          canvas.height = H * dpr;
+          ctx.scale(dpr, dpr);
+        }
+        resize();
+        addEventListener("resize", resize);
+
+        // Khởi tạo các trái tim trôi nổi
+        const hearts = Array.from({ length: 40 }, () => ({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          size: Math.random() * 8 + 4,
+          speed: Math.random() * 0.5 + 0.2,
+          opacity: Math.random() * 0.5 + 0.2,
+          angle: Math.random() * Math.PI * 2,
+          sway: Math.random() * 2 + 1,
+        }));
+
+        // Khởi tạo các hạt lấp lánh (glitter)
+        const sparkles = Array.from({ length: 80 }, () => ({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: Math.random() * 1.5,
+          blink: Math.random() * 0.05,
+        }));
+
+        function drawHeartShape(x, y, size, color, opacity) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.translate(x, y);
+          ctx.fillStyle = color;
+          ctx.globalAlpha = opacity;
+          for (let i = 0; i <= Math.PI * 2; i += 0.1) {
+            const dx = (size / 1.5) * 16 * Math.pow(Math.sin(i), 3);
+            const dy =
+              -(size / 1.5) *
+              (13 * Math.cos(i) -
+                5 * Math.cos(2 * i) -
+                2 * Math.cos(3 * i) -
+                Math.cos(4 * i));
+            if (i === 0) ctx.moveTo(dx, dy);
+            else ctx.lineTo(dx, dy);
+          }
+          ctx.fill();
+          ctx.restore();
+        }
+
+        function tick(t) {
+          // Tạo hiệu ứng mờ ảo cho nền
+          ctx.clearRect(0, 0, W, H);
+
+          // 1. Vẽ các hạt lấp lánh
+          sparkles.forEach((s) => {
+            ctx.fillStyle = `rgba(255, 182, 193, ${0.3 + Math.sin(t * 0.002 + s.x) * 0.2})`;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fill();
+          });
+
+          // 2. Vẽ và cập nhật vị trí trái tim
+          hearts.forEach((h) => {
+            h.y -= h.speed; // Trôi lên trên
+            h.x += Math.sin(t * 0.001 + h.angle) * 0.5; // Đu đưa nhẹ nhàng
+
+            // Nếu trôi ra khỏi màn hình thì xuất hiện lại ở dưới
+            if (h.y < -20) {
+              h.y = H + 20;
+              h.x = Math.random() * W;
+            }
+
+            drawHeartShape(h.x, h.y, h.size, "#ff4d6d", h.opacity);
+          });
+
+          // 3. Hiệu ứng ánh sáng huyền ảo ở các góc
+          const grad = ctx.createRadialGradient(
+            W / 2,
+            H / 2,
+            0,
+            W / 2,
+            H / 2,
+            W,
+          );
+          grad.addColorStop(0, "transparent");
+          grad.addColorStop(1, "rgba(74, 14, 14, 0.4)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, W, H);
+
+          requestAnimationFrame(tick);
+        }
+        tick(0);
+      })();
+
+      /* ===== Confetti ===== */
+      function runConfetti(at, count = 70) {
+        const colors = ["#8a7bff", "#22d3ee", "#ffd166", "#ff7d9b", "#51ffcd"];
+        for (let i = 0; i < count; i++) {
+          const el = document.createElement("div");
+          el.style.cssText =
+            "position:fixed;width:8px;height:8px;border-radius:2px;opacity:.95;z-index:980;";
+          el.style.background = colors[i % colors.length];
+          document.body.appendChild(el);
+          const vx = (Math.random() - 0.5) * 12,
+            vy = -Math.random() * 14 - 6,
+            rot = Math.random() * 360;
+          let t = 0;
+          (function step() {
+            t += 1;
+            const x = at.x + vx * t,
+              y = at.y + vy * t + 0.35 * t * t;
+            el.style.transform = `translate(${x}px,${y}px) rotate(${rot + t * 10}deg)`;
+            el.style.opacity = String(1 - t / 110);
+            if (t < 110) requestAnimationFrame(step);
+            else el.remove();
+          })();
+        }
+      }
+
+      /* ===== Nạp ảnh ===== */
+      async function loadUserImages() {
+        try {
+          const r = await fetch("images/manifest.json", { cache: "no-store" });
+          if (r.ok) {
+            const a = await r.json();
+            if (Array.isArray(a) && a.length)
+              return a.map((n) => "images/" + n);
+          }
+        } catch (_) {}
+        const exts = ["jpg", "jpeg", "png", "webp", "gif"],
+          urls = [];
+        const test = (u) =>
+          new Promise((res) => {
+            const im = new Image();
+            let d = false;
+            const end = (o) => {
+              if (!d) {
+                d = true;
+                res(o);
+              }
+            };
+            im.onload = () => end(true);
+            im.onerror = () => end(false);
+            setTimeout(() => end(false), 1200);
+            im.src = u + "?v=" + Math.random();
+          });
+        for (let i = 1; i <= 60; i++) {
+          for (const e of exts) {
+            const u = `images/${i}.${e}`;
+            if (await test(u)) {
+              urls.push(u);
+              break;
+            }
+          }
+        }
+        return urls;
+      }
+
+      let IMAGES = [],
+        nextIdx = 0,
+        remaining = 0;
+
+      const occupied = [];
+      const GAP_PAD = 20;
+      const KEEP_OUT_PAD = 160;
+
+      function rectInflate(rc, p) {
+        return {
+          left: rc.left - p,
+          top: rc.top - p,
+          right: rc.right + p,
+          bottom: rc.bottom + p,
+        };
+      }
+      function ptInRect(pt, rc) {
+        return (
+          pt.x > rc.left && pt.x < rc.right && pt.y > rc.top && pt.y < rc.bottom
+        );
+      }
+      function keepoutRects() {
+        const gift = document.getElementById("gift").getBoundingClientRect();
+        const hint = document.querySelector(".hint").getBoundingClientRect();
+        const notice = document
+          .getElementById("notice")
+          .getBoundingClientRect();
+        const giftKO = rectInflate(gift, KEEP_OUT_PAD);
+        const hintKO = rectInflate(hint, 40);
+        const noticeKO = rectInflate(notice, 20);
+        return [giftKO, hintKO, noticeKO];
+      }
+      function inAnyKeepout(p, rects) {
+        return rects.some((rc) => ptInRect(p, rc));
+      }
+
+      function imageSize() {
+        const isMobile = innerWidth < 600;
+        const W = isMobile
+          ? Math.min(110, innerWidth * 0.3)
+          : Math.min(180, innerWidth * 0.18);
+        const H = Math.round(W * 1.2); // Để ảnh dọc (Portrait) thường đẹp hơn trên điện thoại
+        return { W, H };
+      }
+
+      function updateRemain() {
+        const el = document.getElementById("remainTxt");
+        const teasers = [
+          "Tình yêu vẫn còn tiếp diễn...",
+          "Mở tiếp để thấy điều ngọt ngào ✨",
+          "Mỗi tấm hình là một kỷ niệm...",
+          "Vẫn còn bất ngờ phía sau đó!",
+          "Chạm để nhận thêm yêu thương 💖",
+          "Những khoảnh khắc đẹp vẫn đang chờ...",
+          "Mở thêm để thấy trái tim rung động!",
+          "Tình yêu không bao giờ dừng lại...",
+          "Hãy để tình yêu lan tỏa thêm nữa!",
+          "Mỗi bức ảnh là một nụ cười...",
+        ];
+        el.textContent = teasers[(Math.random() * teasers.length) | 0];
+      }
+
+      function rectsOverlap(a, b, pad) {
+        const ax1 = a.x - a.w / 2 - pad,
+          ay1 = a.y - a.h / 2 - pad,
+          ax2 = a.x + a.w / 2 + pad,
+          ay2 = a.y + a.h / 2 + pad;
+        const bx1 = b.x - b.w / 2 - pad,
+          by1 = b.y - b.h / 2 - pad,
+          bx2 = b.x + b.w / 2 + pad,
+          by2 = b.y + b.h / 2 + pad;
+        return !(ax2 < bx1 || bx2 < ax1 || ay2 < by1 || by2 < ay1);
+      }
+      function isFreeSpot(pt, w, h) {
+        for (const o of occupied) {
+          if (
+            rectsOverlap(
+              { x: pt.x, y: pt.y, w, h },
+              { x: o.x, y: o.y, w: o.w, h: o.h },
+              GAP_PAD,
+            )
+          )
+            return false;
+        }
+        return true;
+      }
+
+      function pickTarget(from) {
+        const { W, H } = imageSize();
+        const pad = 20;
+
+        // 1. Xác định vùng giới hạn an toàn trên toàn màn hình
+        const xmin = W / 2 + pad;
+        const xmax = innerWidth - W / 2 - pad;
+        const ymin = H / 2 + pad;
+        const ymax = innerHeight - H / 2 - pad;
+
+        // 2. Lấy vị trí hộp quà để tạo "vùng cấm"
+        const giftRect = document
+          .getElementById("gift")
+          .getBoundingClientRect();
+        const safeMargin = 30; // Khoảng cách tối thiểu để không chạm hộp quà
+
+        const forbidden = {
+          left: giftRect.left - W / 2 - safeMargin,
+          right: giftRect.right + W / 2 + safeMargin,
+          top: giftRect.top - H / 2 - safeMargin,
+          bottom: giftRect.bottom + H / 2 + safeMargin,
+        };
+
+        const triesMax = 400;
+
+        // 3. Vòng lặp tìm vị trí: Ưu tiên tìm chỗ trống hoàn toàn
+        for (let t = 0; t < triesMax; t++) {
+          let tx = Math.random() * (xmax - xmin) + xmin;
+          let ty = Math.random() * (ymax - ymin) + ymin;
+
+          // Kiểm tra nếu đè vào hộp quà thì bỏ qua, tìm điểm khác
+          if (
+            tx > forbidden.left &&
+            tx < forbidden.right &&
+            ty > forbidden.top &&
+            ty < forbidden.bottom
+          )
+            continue;
+
+          const pt = { x: tx, y: ty };
+          // Nếu tìm thấy chỗ không đè lên ảnh khác, trả về ngay
+          if (isFreeSpot(pt, W, H)) {
+            return pt;
+          }
+        }
+
+        // 4. MỤC DỰ PHÒNG: Nếu màn hình đã quá chật (sau 400 lần thử không thấy chỗ trống)
+        // Vẫn bắn ra một vị trí NGẪU NHIÊN trên màn hình, chỉ cần tránh hộp quà
+        for (let t = 0; t < 100; t++) {
+          let tx = Math.random() * (xmax - xmin) + xmin;
+          let ty = Math.random() * (ymax - ymin) + ymin;
+
+          if (
+            !(
+              tx > forbidden.left &&
+              tx < forbidden.right &&
+              ty > forbidden.top &&
+              ty < forbidden.bottom
+            )
+          ) {
+            return { x: tx, y: ty };
+          }
+        }
+
+        // 5. Trường hợp hy hữu cuối cùng: Trả về một góc ngẫu nhiên
+        return {
+          x: Math.random() > 0.5 ? xmin : xmax,
+          y: Math.random() > 0.5 ? ymin : ymax,
+        };
+      }
+
+      function releaseOnePhoto(fromX, fromY) {
+        if (remaining <= 0) return false;
+        const src = IMAGES[nextIdx++];
+        remaining--;
+        updateRemain();
+        const { W, H } = imageSize();
+        const t = pickTarget({ x: fromX, y: fromY });
+
+        occupied.push({ x: t.x, y: t.y, w: W, h: H });
+
+        const img = document.createElement("img");
+        img.src = src;
+        img.className = "fly";
+        img.style.cssText = `
+      width: ${W}px; height: ${H}px; left: ${fromX}px; top: ${fromY}px;
+      z-index: ${800 + occupied.length}; border: 4px solid white; border-radius: 8px;
+      position: fixed; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+      transform: translate(-50%,-50%) scale(0);
+  `;
+        document.body.appendChild(img);
+
+        const randomRotation = Math.random() * 30 - 15; // Xoay tự nhiên từ -15 đến 15 độ
+
+        img.animate(
+          [
+            {
+              left: fromX + "px",
+              top: fromY + "px",
+              transform: "translate(-50%,-50%) scale(0.1) rotate(0deg)",
+              opacity: 0,
+            },
+            {
+              left: t.x + "px",
+              top: t.y + "px",
+              transform: `translate(-50%,-50%) scale(1) rotate(${randomRotation}deg)`,
+              opacity: 1,
+            },
+          ],
+          {
+            duration: 1200, // Tăng thời gian bay lên 1.2s để thấy ảnh lan tỏa đều ra các góc
+            easing: "cubic-bezier(0.16, 1, 0.3, 1)", // Hiệu ứng bay chậm dần cực mượt
+            fill: "forwards",
+          },
+        );
+
+        return true;
+      }
+
+      addEventListener("resize", () => {
+        const { W, H } = imageSize(),
+          pad = 16,
+          xmin = W / 2 + pad,
+          ymin = H / 2 + pad,
+          xmax = innerWidth - W / 2 - pad,
+          ymax = innerHeight - H / 2 - pad,
+          krs = keepoutRects();
+        const imgs = [...document.querySelectorAll("img.fly")];
+        imgs.forEach((el, i) => {
+          let x = parseFloat(el.style.left),
+            y = parseFloat(el.style.top);
+          x = Math.max(xmin, Math.min(xmax, x));
+          y = Math.max(ymin, Math.min(ymax, y));
+          if (inAnyKeepout({ x, y }, krs))
+            y = Math.min(y, krs[0].top - (H / 2 + 8));
+          // tách nếu chạm láng giềng
+          for (let j = 0; j < i; j++) {
+            const o = occupied[j],
+              me = { x, y, w: W, h: H };
+            if (rectsOverlap(me, o, GAP_PAD)) {
+              y = o.y + (o.h / 2 + H / 2 + GAP_PAD + 2);
+              y = Math.min(y, ymax);
+            }
+          }
+          el.style.left = x + "px";
+          el.style.top = y + "px";
+          occupied[i] = { x, y, w: W, h: H };
+        });
+      });
+
+      function lettersSequenceAboveGift() {
+        const wrap = document.getElementById("hbdWrap");
+        wrap.innerHTML = "";
+        const gift = document.getElementById("gift");
+        const r = gift.getBoundingClientRect();
+
+        // Đẩy wrap lên cao hơn để chứa được 3 dòng chữ
+        const topOfLid = r.top - 40;
+        const cx = r.left + r.width / 2;
+
+        wrap.style.top = topOfLid + "px";
+        wrap.style.left = cx + "px";
+        wrap.style.opacity = 1;
+        wrap.style.textAlign = "center";
+
+        // Danh sách các từ (Mỗi từ nằm trên một dòng riêng)
+        const words = ["Chúc", "Mừng", "Valentine"];
+        let globalIndex = 0;
+
+        words.forEach((word) => {
+          const wordRow = document.createElement("div");
+          wordRow.style.display = "block";
+          wordRow.style.whiteSpace = "nowrap";
+
+          // Sử dụng Array.from để tách ký tự tiếng Việt có dấu chính xác
+          Array.from(word).forEach((ch) => {
+            const s = document.createElement("span");
+            s.className = "hbd-letter";
+            s.textContent = ch;
+
+            wordRow.appendChild(s);
+
+            // Hiệu ứng hiện ra lần lượt
+            s.style.animation = `letterPop .55s cubic-bezier(.2,.9,.2,1) ${globalIndex * 0.08}s both`;
+            globalIndex++;
+          });
+          wrap.appendChild(wordRow);
+        });
+
+        const total = (letters.length - 1) * 0.08 + 0.55;
+
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              const pts = letters.map((el) => {
+                const rr = el.getBoundingClientRect();
+                return {
+                  x: (rr.left + rr.right) / 2,
+                  y: (rr.top + rr.bottom) / 2,
+                };
+              });
+              fireworks(pts, 900);
+              wrap.animate([{ opacity: 1 }, { opacity: 0 }], {
+                duration: 700,
+                delay: 400,
+                fill: "forwards",
+              });
+              setTimeout(() => {
+                wrap.innerHTML = "";
+              }, 1200);
+            });
+          });
+        }, total * 1000);
+      }
+
+      function drawHeart(ctx, x, y, size, color) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(x, y);
+        ctx.fillStyle = color;
+        // Phương trình toán học tạo hình trái tim
+        for (let i = 0; i <= Math.PI * 2; i += 0.1) {
+          const dx = size * 16 * Math.pow(Math.sin(i), 3);
+          const dy =
+            -size *
+            (13 * Math.cos(i) -
+              5 * Math.cos(2 * i) -
+              2 * Math.cos(3 * i) -
+              Math.cos(4 * i));
+          if (i === 0) ctx.moveTo(dx, dy);
+          else ctx.lineTo(dx, dy);
+        }
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function fireworks(points, duration = 600) {
+        const c = document.getElementById("fireworks"),
+          ctx = c.getContext("2d");
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        c.width = innerWidth * dpr;
+        c.height = innerHeight * dpr;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+        const cols = ["#ff4d6d", "#ff758f", "#ff8fa3", "#ffb3c1", "#c9184a"];
+        const parts = [];
+        points.forEach((p) => {
+          for (let i = 0; i < 40; i++) {
+            const a = Math.random() * Math.PI * 2,
+              s = 2 + Math.random() * 4;
+            parts.push({
+              x: p.x,
+              y: p.y,
+              vx: Math.cos(a) * s,
+              vy: Math.sin(a) * s,
+              life: 0,
+              col: cols[i % cols.length],
+              sz: 0.1 + Math.random() * 0.2,
+            });
+          }
+        });
+        const t0 = performance.now();
+        (function tick(t) {
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          parts.forEach((pt) => {
+            pt.life += 1;
+            pt.x += pt.vx;
+            pt.y += pt.vy;
+            pt.vy += 0.05;
+            ctx.globalAlpha = Math.max(0, 1 - pt.life / 60);
+            ctx.fillStyle = pt.col;
+            drawHeart(ctx, pt.x, pt.y, pt.sz, pt.col);
+          });
+          ctx.globalAlpha = 1;
+          if (t - t0 < duration) requestAnimationFrame(tick);
+          else ctx.clearRect(0, 0, innerWidth, innerHeight);
+        })(t0);
+      }
+
+      function openBurstFx(origin, mini = false) {
+        const ring = document.createElement("div");
+        ring.className = "ring";
+        ring.style.left = origin.x + "px";
+        ring.style.top = origin.y + "px";
+        document.body.appendChild(ring);
+        setTimeout(() => ring.remove(), 1200);
+        const left = document.createElement("div"),
+          right = document.createElement("div");
+        left.className = "banner";
+        right.className = "banner";
+        const len = mini ? 260 : Math.min(380, innerWidth * 0.32);
+        const r = document.getElementById("gift").getBoundingClientRect();
+        const h = r.top + 26;
+        Object.assign(left.style, {
+          left: origin.x + "px",
+          top: h + "px",
+          width: "0px",
+          transform: "scaleX(0.001)",
+        });
+        Object.assign(right.style, {
+          left: origin.x + "px",
+          top: h + 14 + "px",
+          width: "0px",
+          transformOrigin: "right center",
+          transform: "scaleX(0.001)",
+        });
+        document.body.append(left, right);
+        left.animate(
+          [
+            { transform: "scaleX(0.001)" },
+            { transform: `scaleX(${len / 10})` },
+          ],
+          {
+            duration: mini ? 720 : 900,
+            easing: "cubic-bezier(.2,.9,.2,1)",
+            fill: "forwards",
+          },
+        );
+        right.animate(
+          [
+            { transform: "scaleX(0.001)" },
+            { transform: `scaleX(${len / 10})` },
+          ],
+          {
+            duration: mini ? 720 : 900,
+            easing: "cubic-bezier(.2,.9,.2,1)",
+            fill: "forwards",
+            delay: 70,
+          },
+        );
+        setTimeout(
+          () => {
+            left.remove();
+            right.remove();
+          },
+          mini ? 900 : 1100,
+        );
+        const pieces = mini ? 16 : 26;
+        for (let i = 0; i < pieces; i++) {
+          const p = document.createElement("div");
+          p.className = "ribbon-piece";
+          p.style.left = origin.x + "px";
+          p.style.top = origin.y + "px";
+          document.body.appendChild(p);
+          const ang = Math.random() * Math.PI * 2,
+            spd = (mini ? 170 : 210) + Math.random() * 190,
+            dx = Math.cos(ang) * spd,
+            dy = Math.sin(ang) * spd * 0.85,
+            rot = (Math.random() * 360) | 0;
+          p.animate(
+            [
+              { transform: `translate(0,0) rotate(${rot}deg)`, opacity: 1 },
+              {
+                transform: `translate(${dx}px,${dy}px) rotate(${rot + 360}deg)`,
+                opacity: 0,
+              },
+            ],
+            {
+              duration: (mini ? 850 : 1000) + Math.random() * 300,
+              easing: "cubic-bezier(.2,.8,.25,1)",
+              fill: "forwards",
+            },
+          );
+          setTimeout(() => p.remove(), 1400);
+        }
+      }
+
+      let finaleDone = false,
+        emptyStreak = 0,
+        emptyReset = null;
+      let heatLevel = 0;
+      function updatePreflash() {
+        const pf = document.getElementById("preflash");
+        pf.style.opacity = String(Math.min(1, 0.13 * heatLevel));
+        const gift = document.getElementById("gift");
+        gift.animate(
+          [
+            { transform: "translateY(0)" },
+            { transform: `translateY(-${Math.min(6, heatLevel)}px)` },
+            { transform: "translateY(0)" },
+          ],
+          { duration: 260, easing: "ease-in-out" },
+        );
+      }
+      function encourage() {
+        const msgs = [
+          "Yêu là phải click! 🚀",
+          "Gần đến lúc bùng nổ rồi ✨",
+          "Trái tim đang đập nhanh hơn...",
+          "Sắp thấy điều đặc biệt nhất rồi!",
+        ];
+        const i = Math.min(emptyStreak, msgs.length - 1);
+        document.getElementById("remainTxt").textContent = msgs[i];
+      }
+      function explodeGift() {
+        if (finaleDone) return;
+        finaleDone = true;
+        const gift = document.getElementById("gift");
+        const r = gift.getBoundingClientRect();
+        const cx = r.left + r.width / 2,
+          cy = r.top + r.height / 2;
+        const flash = document.createElement("div");
+        flash.className = "flash";
+        document.body.appendChild(flash);
+        flash.style.animation = "flashAnim 780ms ease-out forwards";
+        setTimeout(() => flash.remove(), 820);
+        const shock = document.createElement("div");
+        shock.className = "shock";
+        document.body.appendChild(shock);
+        setTimeout(() => shock.remove(), 1600);
+        for (let i = 0; i < 30; i++) {
+          const f = document.createElement("div");
+          f.innerHTML = "❤️";
+          f.style.position = "fixed";
+          f.style.fontSize = 15 + Math.random() * 20 + "px";
+          f.style.left = cx + "px";
+          f.style.top = cy + "px";
+          f.style.zIndex = "3980";
+          f.style.pointerEvents = "none";
+          document.body.appendChild(f);
+
+          const ang = Math.random() * Math.PI * 2,
+            dist = 150 + Math.random() * 300;
+          const dx = Math.cos(ang) * dist,
+            dy = Math.sin(ang) * dist;
+
+          f.animate(
+            [
+              {
+                transform: "translate(-50%,-50%) scale(0) rotate(0deg)",
+                opacity: 1,
+              },
+              {
+                transform: `translate(${dx}px,${dy}px) scale(1.5) rotate(${360 + Math.random() * 360}deg)`,
+                opacity: 0,
+              },
+            ],
+            {
+              duration: 1500 + Math.random() * 500,
+              easing: "cubic-bezier(.2,.9,.2,1)",
+              fill: "forwards",
+            },
+          );
+
+          setTimeout(() => f.remove(), 2000);
+        }
+        gift.style.transition = "opacity .25s ease, transform .25s ease";
+        gift.style.opacity = "0";
+        gift.style.transform = "scale(.92) translateY(8px)";
+        setTimeout(() => (gift.style.display = "none"), 300);
+        setTimeout(showLetter, 1000);
+      }
+      function showLetter() {
+        const overlay = document.getElementById("letterOverlay");
+        const card = document.getElementById("letter");
+        overlay.style.display = "grid";
+        card.animate(
+          [
+            { opacity: 0, transform: "translateY(20px) scale(.98)" },
+            { opacity: 1, transform: "translateY(0) scale(1)" },
+          ],
+          {
+            duration: 520,
+            easing: "cubic-bezier(.2,.9,.2,1)",
+            fill: "forwards",
+          },
+        );
+        document.getElementById("closeLetter").onclick = () => {
+          overlay.animate([{ opacity: 1 }, { opacity: 0 }], {
+            duration: 320,
+            fill: "forwards",
+          });
+          setTimeout(() => (overlay.style.display = "none"), 340);
+        };
+      }
+
+      /* ===== Click flow ===== */
+      const giftEl = document.getElementById("gift");
+      let firstPlayed = false,
+        cooling = false;
+      function mouthXY() {
+        const r = giftEl.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height * 0.56 };
+      }
+      giftEl.addEventListener(
+        "touchstart",
+        (e) => {
+          e.preventDefault(); // Ngăn chặn double tap zoom
+          giftEl.click();
+        },
+        { passive: false },
+      );
+      giftEl.addEventListener("click", () => {
+        if (!isMusicPlaying && !firstPlayed) {
+          toggleMusic();
+        }
+        if (cooling || finaleDone) return;
+        cooling = true;
+        setTimeout(() => (cooling = false), 240);
+        const pos = mouthXY();
+        if (!firstPlayed) {
+          firstPlayed = true;
+          giftEl.classList.add("opened");
+          openBurstFx(pos, false);
+          runConfetti(pos, 70);
+          lettersSequenceAboveGift();
+          return;
+        }
+        if (remaining > 0) {
+          openBurstFx(pos, true);
+          releaseOnePhoto(pos.x, pos.y);
+          emptyStreak = 0;
+          clearTimeout(emptyReset);
+          emptyReset = null;
+          heatLevel = 0;
+          updatePreflash();
+          updateRemain();
+        } else {
+          heatLevel = Math.min(10, heatLevel + 0.8);
+          updatePreflash();
+          openBurstFx(pos, true);
+          giftEl.querySelector(".lid").animate(
+            [
+              { transform: "rotateX(60deg) translateY(-10px)" },
+              {
+                transform: "rotateX(60deg) translateY(-10px) translateX(-6px)",
+              },
+              {
+                transform: "rotateX(60deg) translateY(-10px) translateX(6px)",
+              },
+              { transform: "rotateX(60deg) translateY(-10px)" },
+            ],
+            { duration: 520, easing: "ease-in-out" },
+          );
+          emptyStreak++;
+          encourage();
+          if (emptyReset) clearTimeout(emptyReset);
+          emptyReset = setTimeout(() => {
+            emptyStreak = 0;
+            heatLevel = 0;
+            updatePreflash();
+            updateRemain();
+          }, 2000);
+          if (emptyStreak >= 10) {
+            explodeGift();
+          }
+        }
+      });
+
+      /* ===== Boot ===== */
+      (async () => {
+        IMAGES = await loadUserImages();
+        nextIdx = 0;
+        remaining = IMAGES.length;
+        updateRemain();
+      })();
+    </script>
+  </body>
+</html>
